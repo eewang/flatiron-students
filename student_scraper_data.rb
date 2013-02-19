@@ -1,16 +1,11 @@
 require 'sqlite3'
-require 'open-uri'
-require 'nokogiri'
 
-if !File.exist?("students.db")
-  db = SQLite3::Database.new "students.db"
-end
-
-db.execute <<-SQL
-  CREATE TABLE IF NOT EXISTS students (
+db = SQLite3::Database.new("students.db")
+rows = db.execute <<-SQL
+  CREATE TABLE students (
     id INTEGER PRIMARY KEY autoincrement,
-    name TEXT,
-    tagline TEXT,
+    name text,
+    tagline text
   );
 SQL
 
@@ -18,27 +13,35 @@ class Student
   attr_accessor :name, :tagline
 
   @@db = SQLite3::Database.new "students.db"
+  @@student_list = []
 
   def initialize(name, tagline)
     @name = name
     @tagline = tagline
+    @@student_list << name
+  end
+
+  def self.student_size
+    @@student_list.size
   end
 
   def save
     @@db.execute(
-        "INSERT INTO events (id, date_scrape, #{attributes_for_sql})
-        VALUES (#{self.class.question_marks_for_sql})", 
-        [$entries.flatten[0] + Event.count_events, Event.scrape_date, insert_for_sql]);
+        "INSERT INTO students (id, name, tagline)
+        VALUES (?, ?, ?)", 
+        [self.class.student_size, name, tagline]);
   end
 
 end
 
 #
 
-erin = Student.new
-erin.name = "Erin"
-erin.tagline = "hello"
+erin = Student.new("Erin", "tagline")
 erin.save
+eugene = Student.new("Eugene", "hello")
+eugene.save
+harrison = Student.new("Harrison", "what")
+harrison.save
 
 
 
