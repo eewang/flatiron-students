@@ -5,11 +5,55 @@ require 'dm-postgres-adapter'
 require 'pry'
 require_relative 'models/model.rb'
 
+# Load Ruby script that scrapes all data from the Flatiron students website
+# Add functionality to enable a user to input students via the browser
+
 get '/' do
   erb :index
+end
+
+post '/' do
+  input = request.POST 
+
+  @student_row = Student.new( :name => input["name"],
+                              :tagline => input["tagline"])
+  @student_row.save
+
+  "success"
 end
 
 get '/students/:student_name' do
   @student = params[:student_name].split
   erb :students
+end
+
+DataMapper.finalize
+DataMapper.auto_upgrade!
+
+get '/input' do
+  # Form for browser input
+  erb :input
+end
+
+post '/input' do
+  @student_row = Student.new(
+    :name => params['name'],
+    :tagline => params['tagline'],
+    :bio => params['bio'],
+    :aspirations => params['aspirations'],
+    :interests => params['interests'],
+    :social_links => params['social_links'],
+    :prevwork => params['prevwork'],
+    :education => params['education'],
+    :codercred => params['codercred'],
+    :fave_apps => params['fave_apps'],
+    :companies => params['companies'],
+    :quotes => params['quotes']
+    )
+  @student_row.save
+  redirect "/input/success"
+end
+
+get '/input/success' do
+  "SUCCESS!!! You are awomsome!"
 end
