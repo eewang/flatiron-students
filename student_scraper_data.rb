@@ -26,10 +26,16 @@ class Student
   end
 
   def save
-    @@db.execute(
-        "INSERT INTO students (id, name, tagline)
-        VALUES (?, ?, ?)", 
-        [self.class.student_size, name, tagline]);
+    # @@db.execute(
+    #     "INSERT INTO students (id, name, tagline)
+    #     VALUES (?, ?, ?)", 
+    #     [self.class.student_size, name, tagline]);
+        if self.class.find_by_name(@name)
+            @@db.execute("INSERT INTO students (name, tagline, bio) 
+                VALUES(?, ?, ?)", [@name, @tagline, @bio]);
+        else
+              @@db.execute("UPDATE students SET bio=(?), tagline=(?) WHERE name=(?)", [@bio, @tagline, @name])
+        end
   end
 
 # build find method

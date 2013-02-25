@@ -49,6 +49,12 @@ class Student
 
   @@db = SQLite3::Database.new("students.db")
 
+  def initialize(id = "", name = "")
+    @id = id
+    @name = name
+    @tagline = tagline
+  end
+
   def scrape_name
     self.name = doc.css("h1").text
   end
@@ -60,11 +66,11 @@ class Student
   	self.bio = doc.css(".two_third p:first").text
   end
   def scrape_aspirations
-    self.aspirations = doc.css(".two_third h3 + p").text
+    self.aspirations = doc.css(".two_third p:nth-of-type(2)").text
   end
   
   def scrape_interests
-     self.interests = doc.css(".two_third p:not(:first)").text
+     self.interests = doc.css(".two_third p:nth-of-type(3)").text
   end
 
   def scrape_social_links
@@ -126,13 +132,54 @@ class Student
     scrape_quotes
   end
 
-  def save
-    @@db.execute(
-        "INSERT INTO students (name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
-        [name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes]);
+
+  def self.find_by_name(name)
+       rows = @@db.execute("SELECT * FROM students WHERE name = ? Limit 1", name)
+       # if the name is empty, return false
+      #  if rows == []
+      #     false
+      #  # if the name exists, return result
+      # else   
+       # result = rows.flatten[1]
+       # result.bio = rows.flatten[2]
+       Student.new("", rows.flatten[1])
+   # end
   end
 
+  def find(id)
+    rows = @@db.execute("SELECT * FROM students WHERE name = ? Limit 1", name)
+    Student.new(rows.flatten[0])
+  end
+
+  def save
+    if self.class.find_by_name(@name)
+    # @@db.execute(
+        # "INSERT INTO students (name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes)
+        # VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+        # [name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes]);
+        if self.class.find_by_name(@name)
+            @@db.execute("INSERT INTO students (name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes) 
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes]);
+        else
+            @@db.execute("UPDATE students SET (name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes) 
+              VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes]);
+        end
+     end
+  end
+
+  def self.all
+    all_the_students = []
+    rows = @@db.execute( "SELECT * FROM students" )
+    i = 0
+    rows.flatten.each do |student|
+      student = Student.new(rows[i][0], rows[i][1])
+      all_the_students << student
+      i += 1
+      # i = all_the_students.length
+    end
+        binding.pry
+   all_the_students
+  end
 end
 
 all_students = []
@@ -146,96 +193,87 @@ student_links.each do |link|
 
   student = Student.new
   student.doc = document
+
   student.scrape_all
   student.save
-  binding.pry
 
   all_students << student
-
-  # puts student.name
-  # puts student.scrape_tagline
-  # puts student.scrape_bio
-  # puts student.scrape_aspirations
-  # puts student.scrape_interests
-  # puts student.scrape_social_links
-  # puts student.scrape_prevwork
-  # puts student.scrape_education
-  # puts student.scrape_codercred
-  # puts student.scrape_fave_apps
-  # puts student.scrape_companies
-  # puts student.scrape_quotes
 end
+
+
+Student.all
 
 #### AVI TESTS #####
 
-# def test(title, &b)
-#   begin
-#     if b
-#       result = b.call
-#       if result.is_a?(Array)
-#         puts "fail: #{title}"
-#         puts "      expected #{result.first} to equal #{result.last}"
-#       elsif result
-#         puts "pass: #{title}"
-#       else
-#         puts "fail: #{title}"
-#       end
-#     else
-#       puts "pending: #{title}"
-#     end
-#   rescue => e
-#     puts "fail: #{title}"
-#     puts e
-#   end
-# end
+def test(title, &b)
+  begin
+    if b
+      result = b.call
+      if result.is_a?(Array)
+        puts "fail: #{title}"
+        puts "      expected #{result.first} to equal #{result.last}"
+      elsif result
+        puts "pass: #{title}"
+      else
+        puts "fail: #{title}"
+      end
+    else
+      puts "pending: #{title}"
+    end
+  rescue => e
+    puts "fail: #{title}"
+    puts e
+  end
+end
  
-# def assert(statement)
-#   !!statement
-# end
+def assert(statement)
+  !!statement
+end
  
-# def assert_equal(actual, expected)
-#   if expected == actual
-#     true
-#   else
-#     [expected, actual]
-#   end
-# end
+def assert_equal(actual, expected)
+  if expected == actual
+    true
+  else
+    [expected, actual]
+  end
+end
  
-# test 'should be able to instantiate a student' do
-#   assert Student.new
-# end
+test 'should be able to instantiate a student' do
+  assert Student.new
+end
  
-# test 'should be able to save a student with a name'
-#   s = Student.new
-#   s.name = "Avi Flombaum"
-#   s.save
+test 'should be able to save a student with a name' do
+  s = Student.new
+  s.name = "Avi Flombaum"
+  s.save
+
+  assert_equal Student.find_by_name("Avi Flombaum").name, "Avi Flombaum"
+end
  
-#   assert_equal Student.find_by_name("Avi Flombaum").name, "Avi Flombaum"
-# end
+test 'should be able to load all students' do
+  s = Student.new
+  s.name = "Avi Flombaum"
+  s.save
+
+  assert Student.all.collect{|s| s.name}.include?("Avi Flombaum")
+end
  
-# test 'should be able to load all students'
-#   s = Student.new
-#   s.name = "Avi Flombaum"
-#   s.save
+test 'should be able to find a student by id' do
+  s = Student.new
+  s.name = "Avi Flombaum"
+  s.save
+
  
-#   assert Student.all.collect{|s| s.name}.include?("Avi Flombaum")
-# end
+  assert_equal Student.find(s.id).name, "Avi Flombaum"
+end
  
-# test 'should be able to find a student by id'
-#   s = Student.new
-#   s.name = "Avi Flombaum"
-#   s.save
+test 'should be able to update a student' do
+  s = Student.new
+  s.name = "Avi Flombaum"
+  s.save
  
-#   assert_equal Student.find(s.id).name, "Avi Flombaum"
-# end
+  s.name = "Bob Whitney"
+  s.save
  
-# test 'should be able to update a student'
-#   s = Student.new
-#   s.name = "Avi Flombaum"
-#   s.save
- 
-#   s.name = "Bob Whitney"
-#   s.save
- 
-#   assert_equal Student.find(s.id).name, "Bob Whitney"
-# end
+  assert_equal Student.find(s.id).name, "Bob Whitney"
+end
