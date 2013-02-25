@@ -64,11 +64,11 @@ class Student
   end
   
   def scrape_interests
-     self.interests = doc.css(".two_third p").text
+     self.interests = doc.css(".two_third p:not(:first)").text
   end
 
   def scrape_social_links
-    self.social_links = (doc.css("div.social_icons a")).collect {|social_link| social_link.attr("href")}
+    self.social_links = (doc.css("div.social_icons a")).collect {|social_link| social_link.attr("href")}.join(", ")
     # social_links = []
     # self.social_links = []
     # # for every i in social links
@@ -96,7 +96,7 @@ class Student
 
   def scrape_codercred
     # self.social_links = (doc.css("div.social_icons a")).collect {|social_link| social_link.attr("href")}
-    self.codercred = (doc.css("#coder-cred td a")).collect { |codercred| codercred.attr("href")}
+    self.codercred = (doc.css("#coder-cred td a")).collect { |codercred| codercred.attr("href")}.join(", ")
   end
 
   def scrape_fave_apps
