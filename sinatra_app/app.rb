@@ -5,6 +5,11 @@ require 'dm-postgres-adapter'
 require 'pry'
 require_relative 'models/model.rb'
 
-get '/'
-  "Hello World!"
+get '/' do
+  erb :index
+end
+
+get '/students/:student_name' do
+  @student = params[:student_name].split
+  erb :students
 end

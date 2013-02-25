@@ -1,0 +1,11 @@
+<html>
+<head>
+  <link href="./public/css/index.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+  <h1>This is the student page</h1>
+  <% @student.each do |name| %>
+  <p>Hi <%= name.capitalize %>!</p>
+  <% end %>
+</body>
+</html>
