@@ -1,0 +1,25 @@
+<html>
+<head>
+  <link href="./public/css/index.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+  <a href="http://0.0.0.0:9292">Back to Home</a>
+  <h1>This is the student search page</h1>
+  <% @student.each do |student| %>
+  <h2><%= student.name %></h2>
+  <ul>
+    <li>TAGLINE: <%= student.tagline %></li>
+    <li>BIO: <%= student.bio %></li>
+    <li>ASPIRATIONS: <%= student.aspirations %></li>
+    <li>INTERESTS <%= student.interests %></li>
+    <li>SOCIAL LINKS: <%= student.social_links %></li>
+    <li>PREVIOUS WORK: <%= student.prevwork %></li>
+    <li>EDUCATION: <%= student.education %></li>
+    <li>CODER CRED: <%= student.codercred %></li>
+    <li>FAVORITE APPS: <%= student.fave_apps %></li>
+    <li>COMPANIES: <%= student.companies %></li>
+    <li>QUOTES: <%= student.quotes %></li>
+  </ul>
+  <% end %>
+</body>
+</html>

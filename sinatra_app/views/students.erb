@@ -1,0 +1,12 @@
+<html>
+<head>
+  <link href="./public/css/bootstrap.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+  <a href="http://0.0.0.0:9292">Back to Home</a>
+  <h1>This is the student page</h1>
+  <% @student.each do |name| %>
+  <p>Hi <%= name.capitalize %>!</p>
+  <% end %>
+</body>
+</html>
