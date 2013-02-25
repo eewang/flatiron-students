@@ -7,7 +7,7 @@ class Student
     
     @@students_list = []
 
-    def initialize
+    def initialize(name="")
         @name = name
         @tagline = tagline
         @bio = bio
@@ -23,7 +23,7 @@ class Student
     def self.create_table
     @@db.execute <<-SQL
       CREATE TABLE IF NOT EXISTS students(
-        id INTEGER PRIMARY KEY autoincrement,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         name text,
         tagline text,
         bio text
@@ -31,28 +31,45 @@ class Student
     SQL
     end
 
+
     ## this abstracts the student attributes so you can add one anytime
 
      # def attributes_for_sql
      #     self.class.attributes.join(",") 
      # end
 
-    # def self.find_by_name(name)
-    #     rows = @@db.execute("SELECT * FROM students WHERE name = ? Limit 1", name)
-    #     result = Student.new
-    #     result.name = rows.flatten[0]
-    #     result.bio = rows.flatten[1]
-    # end
+     def self.students_list_array
+        @@students_list
+     end
+
+    def self.find_by_name(name)
+         rows = @@db.execute("SELECT * FROM students WHERE name = ? Limit 1", name)
+         #if the name is empty, return false
+         if rows == []
+            false
+         #if the name exists, return result
+        else   
+         rows
+         # result = Student.new
+         # result.name = name 
+         # result.name = rows.flatten[1]
+         # result.bio = rows.flatten[2]
+     end
+    end
 
     def save
-        @@db.execute("INSERT INTO students (id, name, tagline, bio) 
-            VALUES( ?, ?, ?, ? )", [@@students_list.size, @name, @tagline, @bio])
+        if self.class.find_by_name(@name)
+            @@db.execute("INSERT INTO students (name, tagline, bio) 
+                VALUES(?, ?, ?)", [@name, @tagline, @bio]);
+        else
+            raise self.inspect
+        #      @@db.execute("UPDATE students SET bio=(?), tagline=(?) WHERE name=(?)", [@bio, @tagline, @name])
+        end
     end
     
     def values_for_db
         values = [@name, @tagline, @bio]
     end
-
 
 
 end
@@ -63,7 +80,29 @@ Student.create_table
 student = Student.new
 student.name = "Ana"
 student.bio = "hi."
+student.tagline = "awomsome?"
 student.save
+
+student = Student.new
+student.name = "Alex"
+student.tagline = "tagline wut wut"
+student.bio = "team awomsome 4lyfe"
+student.save
+
+student = Student.new
+student.name = "Alex"
+student.tagline = "new tagline"
+student.bio = "new bio"
+student.save
+
+student = Student.new
+student.name = "Eugene"
+student.tagline = "an awesome tagline"
+student.bio = "team awomsome"
+student.save
+
+
+# puts Student.find_by_name("Alex") #=> ['Ana', tagline, bio]
 
 #student instance has to know whether or not it's been saved already
 
