@@ -12,10 +12,10 @@ SQL
 class Student
   attr_accessor :name, :tagline
 
-  @@db = SQLite3::Database.new "students.db"
+  # @@db = SQLite3::Database.new "students.db"
   @@student_list = []
 
-  def initialize(name, tagline)
+  def initialize(doc = "", name = "name", tagline = "tagline", bio, aspirations, interests, social_links, prevwork, education, fave_apps, companies, quotes)
     @name = name
     @tagline = tagline
     @@student_list << name
@@ -31,6 +31,14 @@ class Student
         VALUES (?, ?, ?)", 
         [self.class.student_size, name, tagline]);
   end
+
+# build find method
+# if you save, you 
+# you need to teach a student instance to know if it has been saved already
+
+# END RESULT
+# Studen
+
 
 end
 
