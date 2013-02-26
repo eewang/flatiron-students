@@ -4,7 +4,7 @@ require 'data_mapper'
 require 'dm-postgres-adapter'
 require 'pry'
 
-ENV['DATABASE_URL'] ||= 'postgres://erinlee:@localhost/flatiron_students'
+ENV['DATABASE_URL'] ||= 'postgres://eugenewang:@localhost/flatiron_students'
 
 DataMapper.setup(:default, ENV['DATABASE_URL'])
 
