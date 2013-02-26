@@ -55,6 +55,26 @@ post '/find/by-name' do
   redirect "/find/by-name/#{search_term}"
 end
 
+post '/scrape' do
+  record = request.POST
+
+  @student_row = Student.new(
+    :name => record['name'],
+    :tagline => record['tagline'],
+    :bio => record['bio'],
+    :aspirations => record['aspirations'],
+    :interests => record['interests'],
+    :social_links => record['social_links'],
+    :prevwork => record['prevwork'],
+    :education => record['education'],
+    :codercred => record['codercred'],
+    :fave_apps => record['fave_apps'],
+    :companies => record['companies'],
+    :quotes => record['quotes']
+    )
+  @student_row.save
+end
+
 post '/input' do
   @student_row = Student.new(
     :name => params['name'],
