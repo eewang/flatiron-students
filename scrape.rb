@@ -8,7 +8,7 @@ require_relative 'models/model'
 url = "http://students.flatironschool.com"   #Insert URL in quotes 
 
 class Student
-  attr_accessor :id, :doc, :name, :tagline, :bio, :aspirations, :interests, :social_links, :prevwork, :education, :codercred, :fave_apps, :companies, :quotes
+  attr_accessor :id, :doc, :name, :profile_image, :tagline, :bio, :aspirations, :interests, :social_links, :prevwork, :education, :codercred, :fave_apps, :companies, :quotes
 
   # @@db = SQLite3::Database.new("students.db")
 
@@ -20,6 +20,10 @@ class Student
 
   def scrape_name
     self.name = doc.css("h1").text
+  end
+
+  def scrape_profile_image
+    self.profile_image = (doc.css("div.one_third")).collect {|profile_image| profile_image.attr("src")}
   end
 
   def scrape_tagline
@@ -85,6 +89,7 @@ class Student
 
   def scrape_all
     scrape_name
+    scrape_profile_image
     scrape_tagline
     scrape_bio
     scrape_aspirations
@@ -238,6 +243,7 @@ student_links.each do |link|
   student = Student.new
   student.doc = document
   student_name = student.scrape_name
+  student_profile_image = student.scrape_profile_image
   student_tagline = student.scrape_tagline
   student_bio = student.scrape_bio
   student_aspirations = student.scrape_aspirations
@@ -252,6 +258,7 @@ student_links.each do |link|
 
   response = Net::HTTP.post_form(uri, 
     "name" => student_name, 
+    "profile_image" => student_profile_image
     "tagline" => student_tagline,
     "bio" => student_bio,
     "aspirations" => student_aspirations,
