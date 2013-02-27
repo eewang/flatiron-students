@@ -167,6 +167,7 @@ student_links.each do |link|
     student_fave_apps = student.scrape_fave_apps
     student_companies = student.scrape_companies
     student_quotes = student.scrape_quotes
+    binding.pry
 
     response = Net::HTTP.post_form(uri, 
       "name" => student_name, 
@@ -183,7 +184,7 @@ student_links.each do |link|
       "companies" => student_companies,
       "quotes" => student_quotes
     )
-    
+
   rescue
     next
   end
