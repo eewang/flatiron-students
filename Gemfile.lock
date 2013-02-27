@@ -60,6 +60,7 @@ GEM
     json_pure (1.7.7)
     method_source (0.8.1)
     multi_json (1.6.1)
+    nokogiri (1.5.6)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -97,6 +98,7 @@ PLATFORMS
 DEPENDENCIES
   data_mapper
   dm-sqlite-adapter
+  nokogiri
   pry
   rack (= 1.4.1)
   sinatra

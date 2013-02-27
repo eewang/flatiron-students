@@ -7,5 +7,6 @@ gem 'thin'
 gem 'pry'
 gem 'dm-sqlite-adapter'
 gem 'rack', '1.4.1'
+gem 'nokogiri'
 
 # gem 'dm-postgres-adapter'
