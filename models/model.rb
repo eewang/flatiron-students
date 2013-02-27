@@ -13,6 +13,7 @@ class Student
 
   property :id, Serial
   property :name, Text
+  property :profile_image, Text
   property :tagline, Text
   property :bio, Text
   property :aspirations, Text

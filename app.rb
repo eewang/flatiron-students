@@ -60,6 +60,7 @@ post '/scrape' do
 
   @student_row = Student.new(
     :name => record['name'],
+    :profile_image => record['profile_image'],
     :tagline => record['tagline'],
     :bio => record['bio'],
     :aspirations => record['aspirations'],
@@ -78,6 +79,7 @@ end
 post '/input' do
   @student_row = Student.new(
     :name => params['name'],
+    :profile_image => record['profile_image'],
     :tagline => params['tagline'],
     :bio => params['bio'],
     :aspirations => params['aspirations'],

@@ -23,7 +23,7 @@ class Student
   end
 
   def scrape_profile_image
-    self.profile_image = (doc.css("div.one_third")).collect {|profile_image| profile_image.attr("src")}
+    self.profile_image = (doc.css("div.one_third img")).attr("src").value
   end
 
   def scrape_tagline
@@ -120,97 +120,8 @@ class Student
   #  # end
   # end
 
-  # def self.find(id)
-  #   record = @@db.execute("SELECT * FROM students WHERE id = (?) Limit 1", [id]).flatten
-  #     student = Student.new
-  #     student.name = record[1]
-  #     student.tagline = record[2]
-  #     student.bio = record[3]
-  #     student.aspirations = record[4]
-  #     student.interests = record[5]
-  #     student.social_links = record[6]
-  #     student.prevwork = record[7]
-  #     student.education = record[8]
-  #     student.codercred = record[9]
-  #     student.fave_apps = record[10]
-  #     student.companies = record[11]
-  #     student.quotes = record[12]
-  #   student
-  # end
-
-  # def save
-  #   if self.class.find_by_name(@name)
-  #   # @@db.execute(
-  #       # "INSERT INTO students (name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes)
-  #       # VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
-  #       # [name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes]);
-  #       if self.class.find_by_name(@name)
-  #           @@db.execute("INSERT INTO students (name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes) 
-  #               VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes]);
-  #       else
-  #           @@db.execute("UPDATE students SET (name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes) 
-  #             VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes]);
-  #       end
-  #    end
-  # end
-
-  # def self.all
-  #   all_students = []
-  #   # Student.all #=> should return all student instances and create objects
-  #   records = @@db.execute( "SELECT * FROM students" )
-  #   all_students = records.collect do |person|
-  #     student = Student.new.tap do |s|
-  #       s.name = person[1]
-  #       s.tagline = person[2]
-  #       s.bio = person[3]
-  #       s.aspirations = person[4]
-  #       s.interests = person[5]
-  #       s.social_links = person[6]
-  #       s.prevwork = person[7]
-  #       s.education = person[8]
-  #       s.codercred = person[9]
-  #       s.fave_apps = person[10]
-  #       s.companies = person[11]
-  #       s.quotes = person[12]
-  #     end
-  #   end
-
-
-    # genre = Genre.new.tap{|g| g.name = 'rap'}
-   #  all_the_students = []
-
-   #  i = 0
-   #  rows.flatten.each do |student|
-   #    student = Student.new(rows[i][0], rows[i][1])
-   #    all_the_students << student
-   #    i += 1
-   #    # i = all_the_students.length
-   #  end
-   # all_the_students
-  # end
-
   # def self.size
   #   all.size
-  # end
-
-  # def save
-  #   search_name = @@db.execute("SELECT name FROM students WHERE id = (?)", [id]).flatten;
-  #   binding.pry
-  #   if search_name = self.name
-  #     @@db.execute("
-  #       UPDATE ")
-  #   else
-  #     @@db.execute(
-  #       "INSERT INTO students (name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes)
-  #       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
-  #       [name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes]);
-  #   end
-  # end
-
-  # def self.count_records
-  #   count = @@db.execute(
-  #     "SELECT COUNT(name) FROM students"
-  #     ).flatten
   # end
 
 end
@@ -240,37 +151,41 @@ student_links.each do |link|
   rescue
     next
   end
-  student = Student.new
-  student.doc = document
-  student_name = student.scrape_name
-  student_profile_image = student.scrape_profile_image
-  student_tagline = student.scrape_tagline
-  student_bio = student.scrape_bio
-  student_aspirations = student.scrape_aspirations
-  student_interests = student.scrape_interests
-  student_social_links = student.scrape_social_links
-  student_prevwork = student.scrape_prevwork
-  student_education = student.scrape_education
-  student_codercred = student.scrape_codercred
-  student_fave_apps = student.scrape_fave_apps
-  student_companies = student.scrape_companies
-  student_quotes = student.scrape_quotes
+  begin
+    student = Student.new
+    student.doc = document
+    student_name = student.scrape_name
+    student_profile_image = url + "/" + student.scrape_profile_image
+    student_tagline = student.scrape_tagline
+    student_bio = student.scrape_bio
+    student_aspirations = student.scrape_aspirations
+    student_interests = student.scrape_interests
+    student_social_links = student.scrape_social_links
+    student_prevwork = student.scrape_prevwork
+    student_education = student.scrape_education
+    student_codercred = student.scrape_codercred
+    student_fave_apps = student.scrape_fave_apps
+    student_companies = student.scrape_companies
+    student_quotes = student.scrape_quotes
 
-  response = Net::HTTP.post_form(uri, 
-    "name" => student_name, 
-    "profile_image" => student_profile_image
-    "tagline" => student_tagline,
-    "bio" => student_bio,
-    "aspirations" => student_aspirations,
-    "interests" => student_interests,
-    "social_links" => student_social_links,
-    "prevwork" => student_prevwork,
-    "education" => student_education,
-    "codercred" => student_codercred,
-    "fave_apps" => student_fave_apps,
-    "companies" => student_companies,
-    "quotes" => student_quotes
-  )
+    response = Net::HTTP.post_form(uri, 
+      "name" => student_name, 
+      "profile_image" => student_profile_image,
+      "tagline" => student_tagline,
+      "bio" => student_bio,
+      "aspirations" => student_aspirations,
+      "interests" => student_interests,
+      "social_links" => student_social_links,
+      "prevwork" => student_prevwork,
+      "education" => student_education,
+      "codercred" => student_codercred,
+      "fave_apps" => student_fave_apps,
+      "companies" => student_companies,
+      "quotes" => student_quotes
+    )
+  rescue
+    next
+  end
   
 end
 
