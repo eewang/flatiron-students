@@ -10,7 +10,7 @@ url = "http://students.flatironschool.com"   #Insert URL in quotes
 class Student
   attr_accessor :id, :doc, :name, :profile_image, :tagline, :bio, :aspirations, :interests, :social_links, :prevwork, :education, :codercred, :fave_apps, :companies, :quotes
 
-  # @@db = SQLite3::Database.new("students.db")
+   @@db = SQLite3::Database.new("students.db")
 
   def initialize( name = "")
     # @id = Student.count_records
@@ -44,7 +44,7 @@ class Student
   end
 
   def scrape_social_links
-    self.social_links = (doc.css("div.social_icons a")).collect {|social_link| social_link.attr("href")}.join(", ")
+    self.social_links = (doc.css("div.social_icons a")).collect {|social_link| social_link.attr("href")}.join("~")
     # social_links = []
     # self.social_links = []
     # # for every i in social links
@@ -67,12 +67,12 @@ class Student
   end
 
   def scrape_education
-    self.education = doc.css(".one_half:nth-child(2) li:first").text
+    self.education = (doc.css(".one_half:nth-child(2) li")).collect {|ed| ed.text}.join("~")
   end
 
   def scrape_codercred
     # self.social_links = (doc.css("div.social_icons a")).collect {|social_link| social_link.attr("href")}
-    self.codercred = (doc.css("#coder-cred td a")).collect { |codercred| codercred.attr("href")}.join(", ")
+    self.codercred = (doc.css("#coder-cred td a")).collect { |codercred| codercred.attr("href")}.join("~")
   end
 
   def scrape_fave_apps
@@ -183,6 +183,7 @@ student_links.each do |link|
       "companies" => student_companies,
       "quotes" => student_quotes
     )
+    
   rescue
     next
   end
