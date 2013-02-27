@@ -49,14 +49,13 @@ get '/edit' do
 end
 
 get '/:student' do
-  student_query = params[:student]
-  record = Student.all(:name => student_query)
-  student = record[0]
-  binding.pry
-  if records.size == 0
-    puts "Sorry, that student does not exist"
+  student_query = params[:student].gsub(" ", "-").downcase
+  record = Student.all(:slug => student_query)
+  @student = record[0]
+  if record.size == 0
+    "Sorry, that student does not exist"
   else
-    erb :profile.html.erb
+    erb :profile_html
   end
 
 end
@@ -77,7 +76,8 @@ post '/scrape' do
     :codercred => record['codercred'],
     :fave_apps => record['fave_apps'],
     :companies => record['companies'],
-    :quotes => record['quotes']
+    :quotes => record['quotes'],
+    :slug => record['slug']
     )
   @student_row.save
 end
@@ -96,7 +96,7 @@ post '/input' do
     :codercred => params['codercred'],
     :fave_apps => params['fave_apps'],
     :companies => params['companies'],
-    :quotes => params['quotes']
+    :quotes => params['quotes'],
     )
   @student_row.save
   redirect "/input/success"

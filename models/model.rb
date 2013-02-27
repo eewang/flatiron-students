@@ -25,5 +25,6 @@ class Student
   property :fave_apps, Text,      :lazy => false
   property :companies, Text,      :lazy => false
   property :quotes, Text,         :lazy => false
+  property :slug, Text,           :lazy => false
 
 end
