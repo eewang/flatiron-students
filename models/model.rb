@@ -1,10 +1,10 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'data_mapper'
-require 'dm-postgres-adapter'
+require 'dm-sqlite-adapter'
 require 'pry'
 
-ENV['DATABASE_URL'] ||= "postgres://localhost/students.db"
+ENV['DATABASE_URL'] ||= "sqlite://#{Dir.pwd}/students.db"
 
 DataMapper.setup(:default, ENV['DATABASE_URL'])
 
