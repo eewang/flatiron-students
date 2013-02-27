@@ -22,6 +22,8 @@ end
 
 get '/' do
   @images = get_images
+  @students = Student.all
+  binding.pry
   erb :index
 end
 

@@ -9,3 +9,7 @@
   <p><%= "Hello" %></p>
 </body>
 </html>
+
+<% @students.each do |student| %>
+ <%= student.profile_image %>
+<% end %>
