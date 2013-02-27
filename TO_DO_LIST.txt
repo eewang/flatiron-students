@@ -1,7 +1,7 @@
 TO_DO_LIST
 
 Create main 'student.erb' file
-Get CSS stylesheet for student page
+ANA - Get CSS stylesheet for student page and add to sinatra app
 Create main landing page for students
-Create student data modification page
-Get student profile images
+EUGENE - Create student data modification page
+ALEX - Get student profile images
