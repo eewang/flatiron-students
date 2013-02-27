@@ -43,9 +43,9 @@ end
 DataMapper.finalize
 DataMapper.auto_upgrade!
 
-get '/edit' do
+get '/input' do
   # Form for browser input
-  erb :edit
+  erb :input
 end
 
 get '/:student' do
@@ -65,7 +65,6 @@ post '/scrape' do
 
   @student_row = Student.new(
     :name => record['name'],
-    :profile_image => record['profile_image'],
     :tagline => record['tagline'],
     :bio => record['bio'],
     :aspirations => record['aspirations'],
@@ -85,7 +84,6 @@ end
 post '/input' do
   @student_row = Student.new(
     :name => params['name'],
-    :profile_image => record['profile_image'],
     :tagline => params['tagline'],
     :bio => params['bio'],
     :aspirations => params['aspirations'],
