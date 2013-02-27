@@ -3,13 +3,53 @@
   <link href="../css/theme.css" type="text/css" rel="stylesheet">
 </head>
 <body>
-  <h1>This is the main index page</h1>
-  <p><a href="/edit" >Input a New Student!</a></p>
-  <p><a href="/find/by-name" >Find an Existing Student!</a></p>
-  <p><%= "Hello" %></p>
+<div id="page">
+  <header id="header">
+    <div class="center">
+      <nav id="main-menu">
+        <ul>
+          <li class="site-title"><a href="index.html">Students @ Flatiron School</a></li>
+        </ul>
+        <ul>
+          <li><a href="http://flatironschool.com">More about Our School</a></li>
+        </ul>
+      </nav>
+      <div class="clear"></div>
+    </div>
+  </header>
+
+  <section id="about" class="about-us content">
+    <div class="center">
+      <h1 id="intro" style="padding-top: 20px">
+        Every story has heroes. We're 28 people on a journey to learn to love code.
+      </h1>
+
+      <div class="columns">
+      <!-- <h1>This is the main index page</h1> -->
+      <p><a href="/edit" >Input a New Student!</a></p>
+      <!-- <p><a href="/find/by-name" >Find an Existing Student!</a></p> -->
+      <% @students.each do |student| %>
+        <div class="one_third">
+         <a href="<%= student.slug %>"><img class="person" src="<%= student.profile_image %>" width="60" /></a>
+         <div class="name-position"><h2><%= student.name %></h2></div>
+         <div class="clear"></div>
+         <p class="excerpt">Bushwick umami esse hoodie, reprehenderit tempor high life viral cliche mlkshk small batch pork belly ullamco. Reprehenderit leggings odd future, eiusmod sunt four loko 90's quis twee ullamco duis.</p>
+        </div>
+        <%end%>
+      </div>
+      <div class="clear"></div>
+    </div>
+    <!-- /END .center-->
+  </section>
+  <!-- /END #about-us -->
+
+
+   <section id="copyright" class="footer content">
+    <div class="center">
+      <p>&copy; 2013. All Your Rights Are Belong To Us.</p>
+      <div class="clear"></div>
+    </div>
+  </section>
+</div>
 </body>
 </html>
-
-<% @students.each do |student| %>
- <%= student.profile_image %>
-<% end %>

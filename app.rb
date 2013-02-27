@@ -23,7 +23,6 @@ end
 get '/' do
   @images = get_images
   @students = Student.all
-  binding.pry
   erb :index
 end
 
@@ -48,18 +47,6 @@ DataMapper.auto_upgrade!
 get '/input' do
   # Form for browser input
   erb :input
-end
-
-get '/:student' do
-  student_query = params[:student].gsub(" ", "-").downcase
-  record = Student.all(:slug => student_query)
-  @student = record[0]
-  if record.size == 0
-    "Sorry, that student does not exist"
-  else
-    erb :profile_html
-  end
-
 end
 
 post '/scrape' do
@@ -104,4 +91,20 @@ end
 
 get '/input/success' do
   "SUCCESS!!! You are awomsome!"
+end
+
+get '/edit' do
+  # Form for browser input
+  erb :edit
+end
+
+get '/:student' do
+  student_query = params[:student].gsub(" ", "-").downcase
+  record = Student.all(:slug => student_query)
+  @student = record[0]
+  if record.size == 0
+    "Sorry, that student does not exist"
+  else
+    erb :profile_html
+  end
 end

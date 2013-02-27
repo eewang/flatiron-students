@@ -28,7 +28,7 @@
     <div class="center">
       <nav id="main-menu">
         <ul>
-          <li class="site-title"><a href="index.html">Students @ Flatiron School</a></li>
+          <li class="site-title"><a href="../">Students @ Flatiron School</a></li>
         </ul>
         <ul>
           <li><a href="http://flatironschool.com">More about Our School</a></li>
@@ -45,10 +45,9 @@
       <!--start column_wrap-->
       <div class="columns">
         <div class="one_third">
-          <div id="img_mask"></div>
-          <div class=<%= @student.profile_image %>>
-      <!--     # <img src="images/ana_profile.png" height="auto" width="300px" alt="Sample Image">
-       -->  </div>
+          <!-- <div id="img_mask"></div> -->
+              <img src="<%= @student.profile_image %>" height="auto" width="300px" alt="Sample Image">
+        </div>
         <div class="two_third last">
           <h1><%= @student.name %></h1>
           <h2><%= @student.tagline %></h2>
