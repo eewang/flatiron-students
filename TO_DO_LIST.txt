@@ -1,0 +1,7 @@
+TO_DO_LIST
+
+Create main 'student.erb' file
+Get CSS stylesheet for student page
+Create main landing page for students
+Create student data modification page
+Get student profile images
