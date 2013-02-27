@@ -48,24 +48,9 @@ get '/edit' do
   erb :edit
 end
 
-get '/find/by-name/:student' do
-  # get student data
-  name = params[:student]
-  @student = Student.all(:name => name)
-  if @student.empty?
-    "Sorry, there are no students with the name '#{name}'. Please try again."
-  else
-    erb :search_result
-  end
-end
-
-get '/find/by-name' do
-  erb :search_by_name
-end
-
-post '/find/by-name' do
-  search_term = params['search_by_name']
-  redirect "/find/by-name/#{search_term}"
+get '/:student' do
+  student = params[:student]
+  binding.pry
 end
 
 post '/scrape' do
