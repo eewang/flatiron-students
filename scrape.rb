@@ -76,15 +76,15 @@ class Student
   end
 
   def scrape_fave_apps
-    self.fave_apps = doc.css(".center:nth-child(3) .one-third + figcaption").text
+    self.fave_apps = (doc.css(".one_third p")).collect {|apps| apps.text}.join("~")
   end
 
   def scrape_companies
-    self.companies = doc.css("#favorites .columns:last .one_third figcaption").text
+    self.companies = (doc.css("#favorites .columns:last .one_third")).collect {|inc| inc.text}.join("~")
   end
 
   def scrape_quotes
-    self.quotes = doc.css(".center:last").text
+    self.quotes = (doc.css(".one_fourth")).collect {|q| q.text}.join("~")
   end
 
   def scrape_all
