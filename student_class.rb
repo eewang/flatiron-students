@@ -49,15 +49,12 @@ class Student
 
   @@db = SQLite3::Database.new("students.db")
 
-<<<<<<< HEAD
   def initialize(id = "", name = "")
     @id = id
     @name = name
     @tagline = tagline
   end
 
-=======
->>>>>>> f50b834b60bddf68d8afce12a1202ddc3dde5890
   def scrape_name
     self.name = doc.css("h1").text
   end
@@ -73,11 +70,7 @@ class Student
   end
   
   def scrape_interests
-<<<<<<< HEAD
      self.interests = doc.css(".two_third p:nth-of-type(3)").text
-=======
-     self.interests = doc.css(".two_third p:not(:first)").text
->>>>>>> f50b834b60bddf68d8afce12a1202ddc3dde5890
   end
 
   def scrape_social_links
