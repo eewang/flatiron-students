@@ -30,9 +30,9 @@ end
 DataMapper.finalize
 DataMapper.auto_upgrade!
 
-get '/input' do
+get '/edit' do
   # Form for browser input
-  erb :input
+  erb :edit
 end
 
 get '/find/by-name/:student' do
