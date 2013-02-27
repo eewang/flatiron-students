@@ -49,8 +49,16 @@ get '/edit' do
 end
 
 get '/:student' do
-  student = params[:student]
+  student_query = params[:student]
+  record = Student.all(:name => student_query)
+  student = record[0]
   binding.pry
+  if records.size == 0
+    puts "Sorry, that student does not exist"
+  else
+    erb :profile.html.erb
+  end
+
 end
 
 post '/scrape' do
