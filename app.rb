@@ -3,12 +3,25 @@ require 'sinatra/reloader'
 require 'data_mapper'
 require 'dm-sqlite-adapter'
 require 'pry'
+require 'net/http'
+require 'open-uri'
+require 'nokogiri'
 require_relative 'models/model.rb'
 
 # Load Ruby script that scrapes all data from the Flatiron students website
 # Add functionality to enable a user to input students via the browser
 
+def get_images
+  @images = []
+  url = "http://students.flatironschool.com"
+  @doc = Nokogiri::HTML(open(url))
+  image_links = @doc.css("img").each do |image|
+    @images << image.attr("src")
+  end
+end
+
 get '/' do
+  @images = get_images
   erb :index
 end
 

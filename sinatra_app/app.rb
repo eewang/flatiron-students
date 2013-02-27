@@ -8,6 +8,11 @@ require_relative 'models/model.rb'
 # Load Ruby script that scrapes all data from the Flatiron students website
 # Add functionality to enable a user to input students via the browser
 
+url = "http://students.flatironschool.com"
+
+@doc = Nokogiri::HTML(open("#{url}"))
+
+
 get '/' do
   erb :index
 end
