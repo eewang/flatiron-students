@@ -1,7 +1,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'data_mapper'
-require 'dm-postgres-adapter'
+require 'dm-sqlite-adapter'
 require 'pry'
 require_relative 'models/model.rb'
 

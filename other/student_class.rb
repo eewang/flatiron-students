@@ -28,7 +28,7 @@ end
 db = SQLite3::Database.new("students.db")
 rows = db.execute <<-SQL
   CREATE TABLE IF NOT EXISTS students (
-    id INTEGER PRIMARY KEY autoincrement,
+    id INTEGER PRIMARY KEY,
     name text,
     tagline text,
     bio text,
@@ -45,12 +45,15 @@ rows = db.execute <<-SQL
 SQL
 
 class Student
-  attr_accessor :doc, :name, :tagline, :bio, :aspirations, :interests, :social_links, :prevwork, :education, :codercred, :fave_apps, :companies, :quotes
+  attr_accessor :id, :doc, :name, :tagline, :bio, :aspirations, :interests, :social_links, :prevwork, :education, :codercred, :fave_apps, :companies, :quotes
 
   @@db = SQLite3::Database.new("students.db")
 
-  def initialize(id = "", name = "")
-    @id = id
+  # def initialize(id = "", name = "")
+  #   @id = id
+
+  def initialize( name = "")
+    @id = Student.count_records
     @name = name
     @tagline = tagline
   end
@@ -132,10 +135,13 @@ class Student
     scrape_quotes
   end
 
-<<<<<<< HEAD
-
   def self.find_by_name(name)
        rows = @@db.execute("SELECT * FROM students WHERE name = ? Limit 1", name)
+       student = Student.new
+       student.name = rows.flatten[1]
+       student.id = rows.flatten[0]
+       student
+
        # if the name is empty, return false
       #  if rows == []
       #     false
@@ -143,13 +149,25 @@ class Student
       # else   
        # result = rows.flatten[1]
        # result.bio = rows.flatten[2]
-       Student.new("", rows.flatten[1])
    # end
   end
 
-  def find(id)
-    rows = @@db.execute("SELECT * FROM students WHERE name = ? Limit 1", name)
-    Student.new(rows.flatten[0])
+  def self.find(id)
+    record = @@db.execute("SELECT * FROM students WHERE id = (?) Limit 1", [id]).flatten
+      student = Student.new
+      student.name = record[1]
+      student.tagline = record[2]
+      student.bio = record[3]
+      student.aspirations = record[4]
+      student.interests = record[5]
+      student.social_links = record[6]
+      student.prevwork = record[7]
+      student.education = record[8]
+      student.codercred = record[9]
+      student.fave_apps = record[10]
+      student.companies = record[11]
+      student.quotes = record[12]
+    student
   end
 
   def save
@@ -169,138 +187,88 @@ class Student
   end
 
   def self.all
-    all_the_students = []
-    rows = @@db.execute( "SELECT * FROM students" )
-    i = 0
-    rows.flatten.each do |student|
-      student = Student.new(rows[i][0], rows[i][1])
-      all_the_students << student
-      i += 1
-      # i = all_the_students.length
+    all_students = []
+    # Student.all #=> should return all student instances and create objects
+    records = @@db.execute( "SELECT * FROM students" )
+    all_students = records.collect do |person|
+      student = Student.new.tap do |s|
+        s.name = person[1]
+        s.tagline = person[2]
+        s.bio = person[3]
+        s.aspirations = person[4]
+        s.interests = person[5]
+        s.social_links = person[6]
+        s.prevwork = person[7]
+        s.education = person[8]
+        s.codercred = person[9]
+        s.fave_apps = person[10]
+        s.companies = person[11]
+        s.quotes = person[12]
+      end
     end
-        binding.pry
-   all_the_students
+
+
+    # genre = Genre.new.tap{|g| g.name = 'rap'}
+   #  all_the_students = []
+
+   #  i = 0
+   #  rows.flatten.each do |student|
+   #    student = Student.new(rows[i][0], rows[i][1])
+   #    all_the_students << student
+   #    i += 1
+   #    # i = all_the_students.length
+   #  end
+   # all_the_students
   end
+
+  def self.size
+    all.size
+  end
+
   def save
-    @@db.execute(
+    search_name = @@db.execute("SELECT name FROM students WHERE id = (?)", [id]).flatten;
+    binding.pry
+    if search_name = self.name
+      @@db.execute("
+        UPDATE ")
+    else
+      @@db.execute(
         "INSERT INTO students (name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
         [name, tagline, bio, aspirations, interests, social_links, prevwork, education, codercred, fave_apps, companies, quotes]);
+    end
+  end
+
+  def self.count_records
+    count = @@db.execute(
+      "SELECT COUNT(name) FROM students"
+      ).flatten
   end
 
 end
 
 all_students = []
 
-student_links.each do |link|
-  begin 
-    document = Nokogiri::HTML(open(link))
-	rescue
-    next
-  end
+binding.pry
 
-  student = Student.new
-  student.doc = document
+# student_links.each do |link|
+#   begin 
+#     document = Nokogiri::HTML(open(link))
+# 	rescue
+#     next
+#   end
+#   if Student.size < 24
+#     student = Student.new
+#     student.doc = document
+#     student.scrape_all
+#     student.save
+#   end
+#   all_students << student
+# end
 
-  student.scrape_all
-  student.save
-  binding.pry
+# Student.count_records
 
-  all_students << student
-end
-
-Student.all
-
-#### AVI TESTS #####
-
-def test(title, &b)
-  begin
-    if b
-      result = b.call
-      if result.is_a?(Array)
-        puts "fail: #{title}"
-        puts "      expected #{result.first} to equal #{result.last}"
-      elsif result
-        puts "pass: #{title}"
-      else
-        puts "fail: #{title}"
-      end
-    else
-      puts "pending: #{title}"
-    end
-  rescue => e
-    puts "fail: #{title}"
-    puts e
-  end
-end
- 
-def assert(statement)
-  !!statement
-end
- 
-def assert_equal(actual, expected)
-  if expected == actual
-    true
-  else
-    [expected, actual]
-  end
-end
- 
-test 'should be able to instantiate a student' do
-  assert Student.new
-end
- 
-test 'should be able to save a student with a name' do
-  s = Student.new
-  s.name = "Avi Flombaum"
-  s.save
-
-  assert_equal Student.find_by_name("Avi Flombaum").name, "Avi Flombaum"
-end
- 
-test 'should be able to load all students' do
-  s = Student.new
-  s.name = "Avi Flombaum"
-  s.save
-
-  assert Student.all.collect{|s| s.name}.include?("Avi Flombaum")
-end
- 
-test 'should be able to find a student by id' do
-  s = Student.new
-  s.name = "Avi Flombaum"
-  s.save
-
- 
-  assert_equal Student.find(s.id).name, "Avi Flombaum"
-end
- 
-test 'should be able to update a student' do
-  s = Student.new
-  s.name = "Avi Flombaum"
-  s.save
- 
-  s.name = "Bob Whitney"
-  s.save
- 
-  assert_equal Student.find(s.id).name, "Bob Whitney"
-=======
-  # puts student.name
-  # puts student.scrape_tagline
-  # puts student.scrape_bio
-  # puts student.scrape_aspirations
-  # puts student.scrape_interests
-  # puts student.scrape_social_links
-  # puts student.scrape_prevwork
-  # puts student.scrape_education
-  # puts student.scrape_codercred
-  # puts student.scrape_fave_apps
-  # puts student.scrape_companies
-  # puts student.scrape_quotes
->>>>>>> f50b834b60bddf68d8afce12a1202ddc3dde5890
-end
-
-#### AVI TESTS #####
+# #### AVI TESTS #####
 
 # def test(title, &b)
 #   begin
@@ -339,37 +307,51 @@ end
 #   assert Student.new
 # end
  
-# test 'should be able to save a student with a name'
+# test 'should be able to save a student with a name' do
 #   s = Student.new
 #   s.name = "Avi Flombaum"
 #   s.save
- 
+
 #   assert_equal Student.find_by_name("Avi Flombaum").name, "Avi Flombaum"
 # end
  
-# test 'should be able to load all students'
+# test 'should be able to load all students' do
 #   s = Student.new
 #   s.name = "Avi Flombaum"
 #   s.save
- 
+
 #   assert Student.all.collect{|s| s.name}.include?("Avi Flombaum")
 # end
  
-# test 'should be able to find a student by id'
+# test 'should be able to find a student by id' do
 #   s = Student.new
 #   s.name = "Avi Flombaum"
 #   s.save
- 
 #   assert_equal Student.find(s.id).name, "Avi Flombaum"
 # end
  
-# test 'should be able to update a student'
+# test 'should be able to update a student' do
 #   s = Student.new
 #   s.name = "Avi Flombaum"
 #   s.save
  
 #   s.name = "Bob Whitney"
 #   s.save
- 
+
+#  # binding.pry
 #   assert_equal Student.find(s.id).name, "Bob Whitney"
+
+#   # puts student.name
+#   # puts student.scrape_tagline
+#   # puts student.scrape_bio
+#   # puts student.scrape_aspirations
+#   # puts student.scrape_interests
+#   # puts student.scrape_social_links
+#   # puts student.scrape_prevwork
+#   # puts student.scrape_education
+#   # puts student.scrape_codercred
+#   # puts student.scrape_fave_apps
+#   # puts student.scrape_companies
+#   # puts student.scrape_quotes
+
 # end
