@@ -4,3 +4,4 @@ ERIN - Create main 'student.erb' file
 ANA - Create main landing page for students
 EUGENE - Create student data modification page
 ALEX - Get student profile images
+EUGENE - Add permalinks for student profile pages

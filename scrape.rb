@@ -8,7 +8,7 @@ require_relative 'models/model'
 url = "http://students.flatironschool.com"   #Insert URL in quotes 
 
 class Student
-  attr_accessor :id, :doc, :name, :profile_image, :tagline, :bio, :aspirations, :interests, :social_links, :prevwork, :education, :codercred, :fave_apps, :companies, :quotes
+  attr_accessor :id, :doc, :name, :profile_image, :tagline, :bio, :aspirations, :interests, :social_links, :prevwork, :education, :codercred, :fave_apps, :companies, :quotes, :slug
 
    @@db = SQLite3::Database.new("students.db")
 
@@ -76,15 +76,15 @@ class Student
   end
 
   def scrape_fave_apps
-    self.fave_apps = doc.css(".center:nth-child(3) .one-third + figcaption").text
+    self.fave_apps = (doc.css(".one_third p")).collect {|apps| apps.text}.join("~")
   end
 
   def scrape_companies
-    self.companies = doc.css("#favorites .columns:last .one_third figcaption").text
+    self.companies = (doc.css("#favorites .columns:last .one_third")).collect {|inc| inc.text}.join("~")
   end
 
   def scrape_quotes
-    self.quotes = doc.css(".center:last").text
+    self.quotes = (doc.css(".one_fourth")).collect {|q| q.text}.join("~")
   end
 
   def scrape_all
@@ -101,6 +101,10 @@ class Student
     scrape_fave_apps
     scrape_companies
     scrape_quotes
+  end
+
+  def slugify
+    @slug = self.name.gsub(" ", "-").downcase
   end
 
   # def self.find_by_name(name)
@@ -167,7 +171,7 @@ student_links.each do |link|
     student_fave_apps = student.scrape_fave_apps
     student_companies = student.scrape_companies
     student_quotes = student.scrape_quotes
-    binding.pry
+    student_slug = student.slugify
 
     response = Net::HTTP.post_form(uri, 
       "name" => student_name, 
@@ -182,7 +186,8 @@ student_links.each do |link|
       "codercred" => student_codercred,
       "fave_apps" => student_fave_apps,
       "companies" => student_companies,
-      "quotes" => student_quotes
+      "quotes" => student_quotes,
+      "slug" => student_slug
     )
 
   rescue

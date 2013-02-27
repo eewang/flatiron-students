@@ -12,18 +12,19 @@ class Student
   include DataMapper::Resource
 
   property :id, Serial
-  property :name, Text
-  property :profile_image, Text
-  property :tagline, Text
-  property :bio, Text
-  property :aspirations, Text
-  property :interests, Text
-  property :social_links, Text
-  property :prevwork, Text
-  property :education, Text
-  property :codercred, Text
-  property :fave_apps, Text
-  property :companies, Text
-  property :quotes, Text
+  property :name, Text,           :lazy => false
+  property :profile_image, Text,  :lazy => false
+  property :tagline, Text,        :lazy => false
+  property :bio, Text,            :lazy => false
+  property :aspirations, Text,    :lazy => false
+  property :interests, Text,      :lazy => false
+  property :social_links, Text,   :lazy => false
+  property :prevwork, Text,       :lazy => false
+  property :education, Text,      :lazy => false
+  property :codercred, Text,      :lazy => false
+  property :fave_apps, Text,      :lazy => false
+  property :companies, Text,      :lazy => false
+  property :quotes, Text,         :lazy => false
+  property :slug, Text,           :lazy => false
 
 end
