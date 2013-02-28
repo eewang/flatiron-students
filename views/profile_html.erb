@@ -60,10 +60,9 @@
           <p><%= @student.interests %></p>
 
           <div class="social_icons">
-            <ul>
-              <li><a href="http://anabecker.tumblr.com"><i class="icon-globe"></a></i></li>
-              <li><a href="http://www.twitter.com/ana_becker"><i class="icon-twitter"></a></i></li>
-              <li><a href="http://www.linkedin.com/profile/view?id=98941330"><i class="icon-linkedin"></a></i></li>
+            <ul><% @student.social_links.split("~").each do |s| %>
+              <li><%= s %><i class="icon-globe"></i></li>
+              <% end %>
             </ul>
           </div>
 
@@ -83,15 +82,16 @@
         <div class="one_half">
           <h3>Work</h3>
           <ul class="check_style">
-            <li><a href="http://www.scrollmotion.com">Mobile App Design at ScrollMotion</a></li>
-            <li><a href="http://www.infographics.com">Infographics Design at Infographics.com</a></li>
-            <li><a href="http://www.wsj.com">Design/Tech intern at WSJ.com</a></li>
+            <% @student.prevwork.split("~").each do |s| %>
+              <li><%= s %></li>
+              <% end %>
           </ul>
         </div>
         <div class="one_half last">
           <h3>Education</h3>
-          <ul class="check_style">
-            <li><a href="www.cooper.edu">Cooper Union for the Advancement of Science and Art</a><p>Concentration in graphic design</p></li>
+          <ul class="check_style"><% @student.education.split("~").each do |s| %>
+              <li><%= s %></li>
+              <% end %>
           </ul>
         </div>
       </div>
