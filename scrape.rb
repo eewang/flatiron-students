@@ -63,7 +63,7 @@ class Student
   end
 
   def scrape_prevwork
-    self.prevwork = doc.css(".one_half:first li").text
+    self.prevwork = doc.css(".one_half:first li").collect {|work| work.text}.join("~")
   end
 
   def scrape_education
